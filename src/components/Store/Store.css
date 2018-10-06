@@ -1,0 +1,58 @@
+.Store {
+    width: 100%;
+    margin: auto;
+    height: 250px;
+    overflow: scroll;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.6rem;
+    color: wheat;
+    border: 5px solid black;
+    outline-offset: -5px;
+    border-radius: 30px;
+    background-image: url('../../assets/images/product-background.jpg');
+    background-position: center; 
+    background-size: 100%;
+    background: 0.5;
+    opacity: 0.92;
+    
+}
+
+
+.Store::-webkit-scrollbar {
+    display: none;
+}
+
+.Store img {
+    width: 200px;
+}
+
+@media (max-width: 500px) {
+    .Store {
+        width: 350px;
+        height: 500px;
+    }
+    .Store img {
+        width: 100px;
+    }
+}
+
+@media (min-width: 500px) and (min-height: 401px) {
+    .Store {
+        width: 90%;
+        height: 500px;
+    }
+    .Store img {
+        width: 135px;
+    }
+}
+
+@media (min-width: 1000px) and (min-height: 700px) {
+    .Store {
+        width: 90%;
+        height: 600px;
+    }
+    .Store img {
+        width: 200px;
+    }
+}
