@@ -18,3 +18,17 @@
         left: calc(50% - 250px);
     }
 }
+
+@media (max-width: 600px), (max-height: 800px) {
+    .Modal {
+        width: 350px;
+        left: calc(50% - 175px);
+        top: 12%;
+    }
+}
+
+@media (max-height: 550px) {
+    .Modal {
+        top: 0%;
+    }
+}

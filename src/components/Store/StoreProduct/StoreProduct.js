@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
 import champagne from '../../../assets/images/champagne.png';
 import pepsi from '../../../assets/images/pepsi.png';
@@ -86,8 +86,8 @@ class StoreProduct extends Component {
     }
 }
 
-StoreProduct.propTypes = {
-    type: PropTypes.string.isRequired,
-}
+// StoreProduct.propTypes = {
+//     type: PropTypes.string.isRequired,
+// }
 
 export default StoreProduct;

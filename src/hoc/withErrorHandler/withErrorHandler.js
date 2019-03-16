@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import Modal from '../../components/UI/Modal/Modal';
-import Aux from '../Aux';
+import Aux from '../Auxiliary';
 
 const withErrorHandler = (WrappedComponent, axios ) => {
     return class extends Component {
@@ -20,7 +20,6 @@ const withErrorHandler = (WrappedComponent, axios ) => {
         }
 
         componentWillUnmount() {
-            console.log('Will Unmount', this.reqInterceptor, this.resInterceptor);
             axios.interceptors.request.eject(this.reqInterceptor);
             axios.interceptors.response.eject(this.resInterceptor);
         }

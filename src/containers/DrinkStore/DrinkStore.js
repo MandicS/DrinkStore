@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-import Aux from '../../hoc/Aux';
+import Aux from '../../hoc/Auxiliary';
 import classes from './DrinkStore.css'
 import Store from '../../components/Store/Store';
 import BuildControls from '../../components/Store/BuildControls/BuildControls';
@@ -9,40 +10,23 @@ import OrderSummary from '../../components/Store/OrderSummary/OrderSummary';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import axios from '../../axios-order';
-
-const PRODUCT_PRICE = {
-    cocaCola: 0.5,
-    pepsi: 0.5,
-    fanta: 0.5,
-    fantaShokata: 0.5,
-    sup: 0.5,
-    sprite: 0.5,
-    evian: 0.4,
-    wine: 5.5,
-    heineken: 1,
-    whiteWine: 6,
-    roseWine: 7,
-    champagne: 15.6,
-}
+import * as actionTypes from '../../store/actions';
 
 class DrinkStore extends Component{
     state = {
-        products: null,
-        totalPrice: 2,
-        purchasable: false,
         purchasing: false,
         loading: false,
         error: false,
     }
 
     componentDidMount () {
-        axios.get('https://drinkstoreproject.firebaseio.com/products.json')
-            .then(response => {
-                this.setState({products: response.data})
-            })
-            .catch(error => {
-                this.setState({error: true})
-            });
+        // axios.get('https://drinkstoreproject.firebaseio.com/products.json')
+        //     .then(response => {
+        //         this.setState({products: response.data})
+        //     })
+        //     .catch(error => {
+        //         this.setState({error: true})
+        //     });
     }
 
     updatePerchaseState (products) {
@@ -53,39 +37,39 @@ class DrinkStore extends Component{
         .reduce((sum, el) => {
             return sum + el;
         }, 0);
-        this.setState({purchasable: sum > 0});
+        return sum > 0;
     }
 
-    addProductHandler = (type) => {
-        const oldCount = this.state.products[type];
-        const updatedCount = oldCount + 1;
-        const updatedProducts = {
-            ...this.state.products
-        };
-        updatedProducts[type] = updatedCount;
-        const priceAddition = PRODUCT_PRICE[type];
-        const oldPrice = this.state.totalPrice;
-        const newPrice = oldPrice + priceAddition;
-        this.setState({totalPrice: newPrice, products: updatedProducts});
-        this.updatePerchaseState(updatedProducts);
-    }
+    // addProductHandler = (type) => {
+    //     const oldCount = this.props.prods[type];
+    //     const updatedCount = oldCount + 1;
+    //     const updatedProducts = {
+    //         ...this.props.prods
+    //     };
+    //     updatedProducts[type] = updatedCount;
+    //     const priceAddition = PRODUCT_PRICE[type];
+    //     const oldPrice = this.props.price;
+    //     const newPrice = oldPrice + priceAddition;
+    //     this.setState({totalPrice: newPrice, products: updatedProducts});
+    //     this.updatePerchaseState(updatedProducts);
+    // }
 
-    removeProductHandler = (type) => {
-        const oldCount = this.state.products[type];
-        if (oldCount <= 0){
-            return;
-        }
-        const updatedCount = oldCount -1;
-        const updatedProducts = {
-            ...this.state.products
-        };
-        updatedProducts[type] = updatedCount;
-        const priceDeduction = PRODUCT_PRICE[type];
-        const oldPrice = this.state.totalPrice;
-        const newPrice = oldPrice - priceDeduction;
-        this.setState({totalPrice: newPrice, products: updatedProducts});
-        this.updatePerchaseState(updatedProducts);
-    }
+    // removeProductHandler = (type) => {
+    //     const oldCount = this.props.prods[type];
+    //     if (oldCount <= 0){
+    //         return;
+    //     }
+    //     const updatedCount = oldCount -1;
+    //     const updatedProducts = {
+    //         ...this.props.prods
+    //     };
+    //     updatedProducts[type] = updatedCount;
+    //     const priceDeduction = PRODUCT_PRICE[type];
+    //     const oldPrice = this.props.price;
+    //     const newPrice = oldPrice - priceDeduction;
+    //     this.setState({totalPrice: newPrice, products: updatedProducts});
+    //     this.updatePerchaseState(updatedProducts);
+    // }
 
     purchaseHandler = () => {
         this.setState({purchasing: true});
@@ -95,23 +79,22 @@ class DrinkStore extends Component{
         this.setState({purchasing: false})
     }
 
-    purchaseContinueHandler = () => {
-        // alert("you continue");
-        
-        const queryParams = [];
-        for (let i in this.state.products) {
-            queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.products[i]));
-        }
-        queryParams.push('price=' + this.state.totalPrice);
-        const queryString = queryParams.join('&');
-        this.props.history.push({
-            pathname: '/checkout',
-            search: '?' + queryString
-        });
+    purchaseContinueHandler = () => {        
+        // const queryParams = [];
+        // for (let i in this.props.prods) {
+        //     queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.props.prods[i]));
+        // }
+        // queryParams.push('price=' + this.props.price);
+        // const queryString = queryParams.join('&');
+        // this.props.history.push({
+        //     pathname: '/checkout',
+        //     search: '?' + queryString
+        // });
+        this.props.history.push('./checkout');
     }
     render(){
         const disabledInfo = {
-            ...this.state.products
+            ...this.props.prods
         };
         for (let key in disabledInfo) {
             disabledInfo[key] = disabledInfo[key] <= 0;
@@ -119,23 +102,23 @@ class DrinkStore extends Component{
         let orderSummary = null;
         let store = this.state.error ? <p>Products can't be loaded!</p> : <Spinner />;
 
-        if(this.state.products) {
+        if(this.props.prods) {
             store = (
                 <Aux>
-                    <Store products={this.state.products} />
+                    <Store products={this.props.prods} />
                     <BuildControls
-                        productAdded={this.addProductHandler}
-                        productRemoved={this.removeProductHandler}
+                        productAdded={this.props.onProductAdded}
+                        productRemoved={this.props.onProductRemoved}
                         disabled={disabledInfo}
-                        purchasable={this.state.purchasable}
+                        purchasable={this.updatePerchaseState(this.props.prods)}
                         ordered={this.purchaseHandler}
-                        price={this.state.totalPrice} /> 
+                        price={this.props.price} /> 
                 </Aux>
             );
             orderSummary = <OrderSummary 
-                products={this.state.products}
+                products={this.props.prods}
                 purchaseCancelled={this.purchaseCancelHandler} 
-                price={this.state.totalPrice.toFixed(2)}
+                price={this.props.price.toFixed(2)}
                 purchaseContinued={this.purchaseContinueHandler} />;
         }
         if(this.state.loading) {
@@ -157,4 +140,18 @@ class DrinkStore extends Component{
 
 }
 
-export default withErrorHandler(DrinkStore, axios);
+const mapStateToProps = state => {
+    return {
+        prods: state.products,
+        price: state.totalPrice
+    };
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onProductAdded: (prodName) => dispatch({type: actionTypes.ADD_PRODUCT, productName: prodName}),
+        onProductRemoved: (prodName) => dispatch({type: actionTypes.REMOVE_PRODUCT, productName: prodName})
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(DrinkStore, axios));

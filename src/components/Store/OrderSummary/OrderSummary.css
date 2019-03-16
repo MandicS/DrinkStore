@@ -1,0 +1,13 @@
+@media (max-height: 480px) {
+    .OrderSummary ul {
+        display: flex;
+        flex-wrap: wrap;
+        list-style: none;
+        justify-content: flex-start;
+    }
+
+    .OrderSummary ul li {
+        margin: 2px 5px;
+        border: 1px solid black;
+    }
+}
