@@ -4,6 +4,8 @@ import classes from './Order.css';
 
 const order = (props) => {
     const products = [];
+    console.log("bla bla");
+    console.log("bla bla");
     for (let productName in props.products) {
         products.push(
             {
